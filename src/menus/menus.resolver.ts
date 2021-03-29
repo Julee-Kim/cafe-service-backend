@@ -3,6 +3,7 @@ import { Menu } from './entities/menu.entity';
 import { CreateMenuInput, CreateMenuOutput } from './dtos/create-menu.dto';
 import { MenuService } from './menus.service';
 import { MenusOutput } from './dtos/get-menus.dto';
+import { UpdateMenuInput, UpdateMenuOutput } from './dtos/update-menu.dto';
 
 @Resolver((of) => Menu)
 export class MenuResolver {
@@ -18,5 +19,12 @@ export class MenuResolver {
     @Args('input') createMenuInput: CreateMenuInput,
   ): Promise<CreateMenuOutput> {
     return this.menuService.createMenu(createMenuInput);
+  }
+
+  @Mutation((returns) => UpdateMenuOutput)
+  updateMenu(
+    @Args('input') updateMenuInput: UpdateMenuInput,
+  ): Promise<UpdateMenuOutput> {
+    return this.menuService.updateMenu(updateMenuInput);
   }
 }

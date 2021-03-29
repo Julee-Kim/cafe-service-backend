@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMenuInput, CreateMenuOutput } from './dtos/create-menu.dto';
 import { MenusOutput } from './dtos/get-menus.dto';
+import { UpdateMenuInput, UpdateMenuOutput } from './dtos/update-menu.dto';
 import { Menu } from './entities/menu.entity';
 
 @Injectable()
@@ -27,19 +28,41 @@ export class MenuService {
     }
   }
 
-  async createMenu(createMenuInput: CreateMenuInput): Promise<CreateMenuOutput> {
+  async createMenu(
+    createMenuInput: CreateMenuInput,
+  ): Promise<CreateMenuOutput> {
     try {
       const newMenu = this.menus.create(createMenuInput);
       await this.menus.save(newMenu);
 
       return {
         success: true,
-        menuId: newMenu.id
+        menuId: newMenu.id,
       };
     } catch (error) {
       return {
         success: false,
         error: '메뉴 생성에 실패했습니다.',
+      };
+    }
+  }
+
+  async updateMenu(
+    updateMenuInput: UpdateMenuInput,
+  ): Promise<UpdateMenuOutput> {
+    try {
+      const menu = await this.menus.findOne(updateMenuInput.id);
+
+      if (!menu) return { success: false, error: '존재하지 않는 메뉴입니다.' };
+
+      await this.menus.save([updateMenuInput]);
+      return {
+        success: true,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: '메뉴 수정에 실패했습니다.',
       };
     }
   }
