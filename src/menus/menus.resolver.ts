@@ -4,6 +4,7 @@ import { CreateMenuInput, CreateMenuOutput } from './dtos/create-menu.dto';
 import { MenuService } from './menus.service';
 import { MenusOutput } from './dtos/get-menus.dto';
 import { UpdateMenuInput, UpdateMenuOutput } from './dtos/update-menu.dto';
+import { MenuInput, MenuOutput } from './dtos/get-menu.dto';
 
 @Resolver((of) => Menu)
 export class MenuResolver {
@@ -12,6 +13,11 @@ export class MenuResolver {
   @Query((returns) => MenusOutput)
   getMenus(): Promise<MenusOutput> {
     return this.menuService.getMenus();
+  }
+
+  @Query((returns) => MenuOutput)
+  getMenu(@Args('input') menuInput: MenuInput): Promise<MenuOutput> {
+    return this.menuService.getMenu(menuInput);
   }
 
   @Mutation((returns) => CreateMenuOutput)
