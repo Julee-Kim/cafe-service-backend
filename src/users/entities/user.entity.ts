@@ -5,7 +5,7 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -38,7 +38,7 @@ export class User extends CoreEntity {
 
   @Field((type) => String)
   @Column({ unique: true })
-  @IsString()
+  @IsEmail()
   email: string;
 
   @Field((type) => String)
@@ -55,6 +55,16 @@ export class User extends CoreEntity {
         console.log(error);
         throw new InternalServerErrorException();
       }
+    }
+  }
+
+  async comparePassword(password): Promise<Boolean> {
+    try {
+      const isSame = await bcrypt.compare(password, this.password);
+      return isSame;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 }
