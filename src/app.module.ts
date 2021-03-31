@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MenusModule } from './menus/menus.module';
 import { Menu } from './menus/entities/menu.entity';
+import { UsersModule } from './users/users.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -32,12 +34,13 @@ import { Menu } from './menus/entities/menu.entity';
       database: process.env.DB_DATABASE,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: true,
-      entities: [Menu],
+      entities: [Menu, User],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
     MenusModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
