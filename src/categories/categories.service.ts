@@ -6,6 +6,7 @@ import {
   CreateCategoryOutput,
 } from './dtos/create-category.dto';
 import { GetCategoriesOutput } from './dtos/get-categories.dto';
+import { GetCategoryInput, GetCategoryOutput } from './dtos/get-category.dto';
 import { Category } from './entities/category.entity';
 
 @Injectable()
@@ -26,6 +27,28 @@ export class CategoriesService {
       return {
         success: false,
         error: '카테고리 목록 가져오기에 실패하였습니다.',
+      };
+    }
+  }
+
+  async getCategory({
+    categoryId,
+  }: GetCategoryInput): Promise<GetCategoryOutput> {
+    try {
+      const category = await this.categories.findOne(categoryId);
+
+      if (!category) {
+        return {
+          success: false,
+          error: '카테고리를 찾을 수 없습니다.',
+        };
+      }
+
+      return { success: true, category };
+    } catch (error) {
+      return {
+        success: false,
+        error: '카테고리를 가져오는데 실패했습니다.',
       };
     }
   }

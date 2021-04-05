@@ -5,6 +5,7 @@ import {
   CreateCategoryOutput,
 } from './dtos/create-category.dto';
 import { GetCategoriesOutput } from './dtos/get-categories.dto';
+import { GetCategoryInput, GetCategoryOutput } from './dtos/get-category.dto';
 import { Category } from './entities/category.entity';
 
 @Resolver((of) => Category)
@@ -14,6 +15,13 @@ export class CategoriesResolver {
   @Query((returns) => GetCategoriesOutput)
   getCategories(): Promise<GetCategoriesOutput> {
     return this.categoriesService.getCategories();
+  }
+
+  @Query((returns) => GetCategoryOutput)
+  getCategory(
+    @Args('input') getCategoryInput: GetCategoryInput,
+  ): Promise<GetCategoryOutput> {
+    return this.categoriesService.getCategory(getCategoryInput);
   }
 
   @Mutation((returns) => CreateCategoryOutput)
