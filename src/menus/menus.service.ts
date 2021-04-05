@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/categories/entities/category.entity';
 import { Repository } from 'typeorm';
 import { CreateMenuInput, CreateMenuOutput } from './dtos/create-menu.dto';
-import { MenuInput, MenuOutput } from './dtos/get-menu.dto';
-import { MenusOutput } from './dtos/get-menus.dto';
+import { GetMenuInput, GetMenuOutput } from './dtos/get-menu.dto';
+import { GetMenusOutput } from './dtos/get-menus.dto';
 import { UpdateMenuInput, UpdateMenuOutput } from './dtos/update-menu.dto';
 import { Menu } from './entities/menu.entity';
 
@@ -16,7 +16,7 @@ export class MenuService {
     private readonly categories: Repository<Category>,
   ) {}
 
-  async getMenus(): Promise<MenusOutput> {
+  async getMenus(): Promise<GetMenusOutput> {
     try {
       const menus = await this.menus.find();
 
@@ -32,7 +32,7 @@ export class MenuService {
     }
   }
 
-  async getMenu({ menuId }: MenuInput): Promise<MenuOutput> {
+  async getMenu({ menuId }: GetMenuInput): Promise<GetMenuOutput> {
     try {
       const menu = await this.menus.findOne(menuId);
 

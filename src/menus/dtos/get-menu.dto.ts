@@ -3,13 +3,13 @@ import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Menu } from '../entities/menu.entity';
 
 @InputType()
-export class MenuInput {
+export class GetMenuInput {
   @Field((type) => Int)
   menuId: number;
 }
 
 @ObjectType()
-export class MenuOutput extends CoreOutput {
+export class GetMenuOutput extends CoreOutput {
   @Field((type) => Menu, { nullable: true })
   menu?: Menu;
 }

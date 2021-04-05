@@ -2,22 +2,22 @@ import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Menu } from './entities/menu.entity';
 import { CreateMenuInput, CreateMenuOutput } from './dtos/create-menu.dto';
 import { MenuService } from './menus.service';
-import { MenusOutput } from './dtos/get-menus.dto';
+import { GetMenusOutput } from './dtos/get-menus.dto';
 import { UpdateMenuInput, UpdateMenuOutput } from './dtos/update-menu.dto';
-import { MenuInput, MenuOutput } from './dtos/get-menu.dto';
+import { GetMenuInput, GetMenuOutput } from './dtos/get-menu.dto';
 
 @Resolver((of) => Menu)
 export class MenuResolver {
   constructor(private readonly menuService: MenuService) {}
 
-  @Query((returns) => MenusOutput)
-  getMenus(): Promise<MenusOutput> {
+  @Query((returns) => GetMenusOutput)
+  getMenus(): Promise<GetMenusOutput> {
     return this.menuService.getMenus();
   }
 
-  @Query((returns) => MenuOutput)
-  getMenu(@Args('input') menuInput: MenuInput): Promise<MenuOutput> {
-    return this.menuService.getMenu(menuInput);
+  @Query((returns) => GetMenuOutput)
+  getMenu(@Args('input') getMenuInput: GetMenuInput): Promise<GetMenuOutput> {
+    return this.menuService.getMenu(getMenuInput);
   }
 
   @Mutation((returns) => CreateMenuOutput)
