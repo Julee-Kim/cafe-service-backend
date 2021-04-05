@@ -4,6 +4,10 @@ import {
   CreateCategoryInput,
   CreateCategoryOutput,
 } from './dtos/create-category.dto';
+import {
+  DeleteCategoryInput,
+  DeleteCategoryOutput,
+} from './dtos/delete-category.dto';
 import { GetCategoriesOutput } from './dtos/get-categories.dto';
 import { GetCategoryInput, GetCategoryOutput } from './dtos/get-category.dto';
 import { Category } from './entities/category.entity';
@@ -29,5 +33,12 @@ export class CategoriesResolver {
     @Args('input') createCategoryInput: CreateCategoryInput,
   ): Promise<CreateCategoryOutput> {
     return this.categoriesService.createCategory(createCategoryInput);
+  }
+
+  @Mutation((type) => DeleteCategoryOutput)
+  deleteCategory(
+    @Args('input') deleteCategoryInput: DeleteCategoryInput,
+  ): Promise<DeleteCategoryOutput> {
+    return this.categoriesService.deleteCategory(deleteCategoryInput);
   }
 }

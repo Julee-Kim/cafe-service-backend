@@ -5,6 +5,10 @@ import {
   CreateCategoryInput,
   CreateCategoryOutput,
 } from './dtos/create-category.dto';
+import {
+  DeleteCategoryInput,
+  DeleteCategoryOutput,
+} from './dtos/delete-category.dto';
 import { GetCategoriesOutput } from './dtos/get-categories.dto';
 import { GetCategoryInput, GetCategoryOutput } from './dtos/get-category.dto';
 import { Category } from './entities/category.entity';
@@ -68,6 +72,29 @@ export class CategoriesService {
       return {
         success: false,
         error: '카테고리 생성에 실패하였습니다.',
+      };
+    }
+  }
+
+  async deleteCategory({
+    categoryId,
+  }: DeleteCategoryInput): Promise<DeleteCategoryOutput> {
+    try {
+      const category = await this.categories.findOne(categoryId);
+
+      if (!category) {
+        return {
+          success: false,
+          error: '존재하지 않는 카테고리입니다.',
+        };
+      }
+
+      await this.categories.delete(categoryId);
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: '카테고리 삭제에 실패했습니다.',
       };
     }
   }
