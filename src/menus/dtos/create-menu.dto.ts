@@ -9,7 +9,10 @@ import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Menu } from '../entities/menu.entity';
 
 @InputType()
-export class CreateMenuInput extends PartialType(Menu) {}
+export class CreateMenuInput extends PartialType(Menu) {
+  @Field((type) => Int)
+  categoryId: number;
+}
 
 @ObjectType()
 export class CreateMenuOutput extends CoreOutput {

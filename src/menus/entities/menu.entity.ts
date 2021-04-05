@@ -1,7 +1,8 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { IsNumber, IsString, Length } from 'class-validator';
+import { Category } from 'src/categories/entities/category.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 
 @InputType('MenuInputType', { isAbstract: true })
 @ObjectType()
@@ -70,4 +71,15 @@ export class Menu extends CoreEntity {
   // @Column()
   // @IsString()
   // img: string;
+
+  @Field((type) => Category)
+  @ManyToOne((type) => Category, (category) => category.menus, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    eager: true,
+  })
+  category: Category;
+
+  @RelationId((menu: Menu) => menu.category)
+  categoryId: number;
 }

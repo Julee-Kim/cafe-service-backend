@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from 'src/categories/entities/category.entity';
 import { Repository } from 'typeorm';
 import { CreateMenuInput, CreateMenuOutput } from './dtos/create-menu.dto';
 import { MenuInput, MenuOutput } from './dtos/get-menu.dto';
@@ -11,6 +12,8 @@ import { Menu } from './entities/menu.entity';
 export class MenuService {
   constructor(
     @InjectRepository(Menu) private readonly menus: Repository<Menu>,
+    @InjectRepository(Category)
+    private readonly categories: Repository<Category>,
   ) {}
 
   async getMenus(): Promise<MenusOutput> {
@@ -52,8 +55,13 @@ export class MenuService {
   async createMenu(
     createMenuInput: CreateMenuInput,
   ): Promise<CreateMenuOutput> {
+    console.log(createMenuInput.categoryId);
     try {
       const newMenu = this.menus.create(createMenuInput);
+
+      const category = await this.categories.findOne(newMenu.categoryId);
+
+      newMenu.category = category;
       await this.menus.save(newMenu);
 
       return {
