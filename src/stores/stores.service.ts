@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStoreInput, CreateStoreOutput } from './dtos/create-store.dto';
+import { DeleteStoreInput, DeleteStoreOutput } from './dtos/delete-store.dto';
 import { GetStoreInput, GetStoreOutput } from './dtos/get-store.dto';
 import { GetStoresInput, GetStoresOutput } from './dtos/get-stores.dto';
 import { UpdateStoreInput, UpdateStoreOutput } from './dtos/update-store.dto';
@@ -137,6 +138,26 @@ export class StoresService {
       return {
         success: false,
         error: '매장 정보 수정에 실패하였습니다.',
+      };
+    }
+  }
+
+  async deleteStore({ storeId }: DeleteStoreInput): Promise<DeleteStoreOutput> {
+    try {
+      const result = await this.getStore({ storeId });
+
+      if (result.success) {
+        // 매장 삭제
+        await this.stores.delete(storeId);
+
+        return { success: true };
+      } else {
+        return result;
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: '매장 삭제를 실패하였습니다.',
       };
     }
   }
