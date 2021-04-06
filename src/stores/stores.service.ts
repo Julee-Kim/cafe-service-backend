@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateStoreInput, CreateStoreOutput } from './dtos/create-store.dto';
 import { GetStoreInput, GetStoreOutput } from './dtos/get-store.dto';
 import { GetStoresInput, GetStoresOutput } from './dtos/get-stores.dto';
+import { UpdateStoreInput, UpdateStoreOutput } from './dtos/update-store.dto';
 import { Gugun } from './entities/gugun.entity';
 import { Sido } from './entities/sido.entity';
 import { Store } from './entities/store.entity';
@@ -109,6 +110,33 @@ export class StoresService {
       return {
         success: false,
         error: '매장 생성에 실패하였습니다.',
+      };
+    }
+  }
+
+  async updateStore(
+    updateStoreInput: UpdateStoreInput,
+  ): Promise<UpdateStoreOutput> {
+    try {
+      const result = await this.getStore({ storeId: updateStoreInput.storeId });
+
+      if (result.success) {
+        // 매장 정보 수정
+        await this.stores.save([
+          {
+            id: updateStoreInput.storeId,
+            ...updateStoreInput,
+          },
+        ]);
+
+        return { success: true };
+      } else {
+        return result;
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: '매장 정보 수정에 실패하였습니다.',
       };
     }
   }

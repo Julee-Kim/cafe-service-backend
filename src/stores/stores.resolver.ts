@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateStoreInput, CreateStoreOutput } from './dtos/create-store.dto';
 import { GetStoreInput, GetStoreOutput } from './dtos/get-store.dto';
 import { GetStoresInput, GetStoresOutput } from './dtos/get-stores.dto';
+import { UpdateStoreInput, UpdateStoreOutput } from './dtos/update-store.dto';
 import { Store } from './entities/store.entity';
 import { StoresService } from './stores.service';
 
@@ -28,5 +29,12 @@ export class StoresResolver {
     @Args('input') createStoreInput: CreateStoreInput,
   ): Promise<CreateStoreOutput> {
     return this.storesService.createStore(createStoreInput);
+  }
+
+  @Mutation((returns) => UpdateStoreOutput)
+  updateStore(
+    @Args('input') updateStoreInput: UpdateStoreInput,
+  ): Promise<UpdateStoreOutput> {
+    return this.storesService.updateStore(updateStoreInput);
   }
 }
