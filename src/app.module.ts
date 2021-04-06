@@ -18,6 +18,10 @@ import { CategoriesModule } from './categories/categories.module';
 import { Category } from './categories/entities/category.entity';
 import { AuthModule } from './auth/auth.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { StoresModule } from './stores/stores.module';
+import { Store } from './stores/entities/store.entity';
+import { Gugun } from './stores/entities/gugun.entity';
+import { Sido } from './stores/entities/sido.entity';
 
 @Module({
   imports: [
@@ -45,7 +49,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       database: process.env.DB_DATABASE,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: true,
-      entities: [Menu, User, Category],
+      entities: [Menu, User, Category, Sido, Gugun, Store],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
@@ -56,6 +60,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     MenusModule,
     UsersModule,
     CategoriesModule,
+    StoresModule,
   ],
   controllers: [],
   providers: [],
