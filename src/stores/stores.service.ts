@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStoreInput, CreateStoreOutput } from './dtos/create-store.dto';
+import { GetStoreInput, GetStoreOutput } from './dtos/get-store.dto';
 import { GetStoresInput, GetStoresOutput } from './dtos/get-stores.dto';
 import { Gugun } from './entities/gugun.entity';
 import { Sido } from './entities/sido.entity';
@@ -27,6 +28,26 @@ export class StoresService {
       return {
         success: false,
         error: '모든 매장을 가져오는데 실패했습니다.',
+      };
+    }
+  }
+
+  async getStore({ storeId }: GetStoreInput): Promise<GetStoreOutput> {
+    try {
+      const store = await this.stores.findOne(storeId);
+
+      if (!store) {
+        return {
+          success: false,
+          error: '매장을 찾을 수 없습니다.',
+        };
+      }
+
+      return { success: true, store };
+    } catch (error) {
+      return {
+        success: false,
+        error: '매장을 가져오는데 실패했습니다.',
       };
     }
   }
