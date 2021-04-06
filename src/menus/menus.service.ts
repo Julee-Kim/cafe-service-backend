@@ -80,14 +80,21 @@ export class MenuService {
     updateMenuInput: UpdateMenuInput,
   ): Promise<UpdateMenuOutput> {
     try {
-      const menu = await this.menus.findOne(updateMenuInput.id);
+      const result = await this.getMenu({ menuId: updateMenuInput.menuId });
 
-      if (!menu) return { success: false, error: '존재하지 않는 메뉴입니다.' };
+      if (result.success) {
+        // 매장 정보 수정
+        await this.menus.save([
+          {
+            id: updateMenuInput.menuId,
+            ...updateMenuInput,
+          },
+        ]);
 
-      await this.menus.save([updateMenuInput]);
-      return {
-        success: true,
-      };
+        return { success: true };
+      } else {
+        return result;
+      }
     } catch (error) {
       return {
         success: false,
