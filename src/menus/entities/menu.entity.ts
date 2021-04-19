@@ -26,51 +26,51 @@ export class Menu extends CoreEntity {
   @Length(5)
   content: string;
 
-  // @Field((type) => String)
-  // @Column()
-  // @IsString()
-  // @Length(5)
-  // recommend: string;
+  @Field((type) => String)
+  @Column()
+  @IsString()
+  @Length(5)
+  recommend: string;
 
-  // @Field((type) => Int, { defaultValue: 355 })
-  // @Column()
-  // @IsNumber()
-  // standard: number;
+  @Field((type) => Int, { defaultValue: 355 })
+  @Column()
+  @IsNumber()
+  standard: number;
 
-  // @Field((type) => Int, { defaultValue: 0 })
-  // @Column()
-  // @IsNumber()
-  // kcal: number;
+  @Field((type) => Int, { defaultValue: 0 })
+  @Column()
+  @IsNumber()
+  kcal: number;
 
-  // @Field((type) => Int, { defaultValue: 0 })
-  // @Column()
-  // @IsNumber()
-  // satFAT: number;
+  @Field((type) => Int, { defaultValue: 0 })
+  @Column()
+  @IsNumber()
+  satFAT: number;
 
-  // @Field((type) => Int, { defaultValue: 0 })
-  // @Column()
-  // @IsNumber()
-  // protein: number;
+  @Field((type) => Int, { defaultValue: 0 })
+  @Column()
+  @IsNumber()
+  protein: number;
 
-  // @Field((type) => Int, { defaultValue: 0 })
-  // @Column()
-  // @IsNumber()
-  // sodium: number;
+  @Field((type) => Int, { defaultValue: 0 })
+  @Column()
+  @IsNumber()
+  sodium: number;
 
-  // @Field((type) => Int, { defaultValue: 0 })
-  // @Column()
-  // @IsNumber()
-  // sugars: number;
+  @Field((type) => Int, { defaultValue: 0 })
+  @Column()
+  @IsNumber()
+  sugars: number;
 
-  // @Field((type) => Int, { defaultValue: 0 })
-  // @Column()
-  // @IsNumber()
-  // caffeine: number;
+  @Field((type) => Int, { defaultValue: 0 })
+  @Column()
+  @IsNumber()
+  caffeine: number;
 
-  // @Field((type) => String)
-  // @Column()
-  // @IsString()
-  // img: string;
+  @Field((type) => String)
+  @Column()
+  @IsString()
+  img: string;
 
   @Field((type) => Category)
   @ManyToOne((type) => Category, (category) => category.menus, {
