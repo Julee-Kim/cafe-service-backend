@@ -65,7 +65,7 @@ export class UsersService {
         return { success: false, error: '잘못된 비밀번호입니다.' };
 
       // 토큰 생성
-      const payload = { username: user.name, sub: user.id };
+      const payload = { id: user.id };
       const token = this.jwtService.sign(payload);
 
       return { success: true, token };

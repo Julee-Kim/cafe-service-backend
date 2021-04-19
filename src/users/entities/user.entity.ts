@@ -10,7 +10,7 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
-enum Genders {
+export enum Genders {
   F = 'F',
   M = 'M',
 }
