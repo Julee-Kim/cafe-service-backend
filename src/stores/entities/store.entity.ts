@@ -15,17 +15,22 @@ export class Store extends CoreEntity {
   @Field((type) => String)
   @Column()
   @IsString()
-  tel: string;
-
-  @Field((type) => String)
-  @Column()
-  @IsString()
   sido: string;
 
   @Field((type) => String)
   @Column()
   @IsString()
   gugun: string;
+
+  @Field((type) => Int)
+  @Column()
+  @IsNumber()
+  sidoId: number;
+
+  @Field((type) => Int)
+  @Column()
+  @IsNumber()
+  gugunId: number;
 
   @Field((type) => String)
   @Column()
@@ -50,15 +55,15 @@ export class Store extends CoreEntity {
   @Field((type) => String)
   @Column()
   @IsString()
+  tel: string;
+
+  @Field((type) => String)
+  @Column()
+  @IsString()
   lat: string;
 
   @Field((type) => String)
   @Column()
   @IsString()
   lot: string;
-
-  @Field((type) => Int)
-  @Column()
-  @IsNumber()
-  gugunId: number;
 }

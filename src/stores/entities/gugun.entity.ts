@@ -8,7 +8,7 @@ import { Column, Entity } from 'typeorm';
 @Entity()
 export class Gugun extends CoreEntity {
   @Field((type) => String)
-  @Column({ unique: true })
+  @Column()
   @IsString()
   @Length(10)
   name: string;

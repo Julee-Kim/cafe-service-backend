@@ -11,5 +11,5 @@ export class Sido extends CoreEntity {
   @Column({ unique: true })
   @IsString()
   @Length(2, 2)
-  name: string;
+  name?: string;
 }

@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStoreInput, CreateStoreOutput } from './dtos/create-store.dto';
 import { DeleteStoreInput, DeleteStoreOutput } from './dtos/delete-store.dto';
+import { GetGugunsOutput } from './dtos/get-guguns.dto';
+import { GetSidosOutput } from './dtos/get-sidos.dto';
 import { GetStoreInput, GetStoreOutput } from './dtos/get-store.dto';
 import { GetStoresInput, GetStoresOutput } from './dtos/get-stores.dto';
 import { UpdateStoreInput, UpdateStoreOutput } from './dtos/update-store.dto';
@@ -18,9 +20,43 @@ export class StoresService {
     @InjectRepository(Gugun) private readonly guguns: Repository<Gugun>,
   ) {}
 
-  async getStores(getStoresInput: GetStoresInput): Promise<GetStoresOutput> {
+  async getSidos(): Promise<GetSidosOutput> {
     try {
-      const stores = await this.stores.find();
+      const sidos = await this.sidos.find();
+
+      return {
+        success: true,
+        results: sidos
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: '시도를 가져오는데 실패했습니다.'
+      }
+    }
+  }
+
+  async getGuguns(): Promise<GetGugunsOutput> {
+    try {
+      const guguns = await this.guguns.find();
+
+      return {
+        success: true,
+        results: guguns
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: '구군을 가져오는데 실패했습니다.'
+      }
+    }
+  }
+
+  async getStores(getStoresInput: GetStoresInput): Promise<GetStoresOutput> {
+    console.log(getStoresInput)
+    try {
+      const stores = await this.stores.find({...getStoresInput});
+      console.log(stores)
 
       return {
         success: true,
@@ -88,12 +124,11 @@ export class StoresService {
       // 3. 매장(name)이 있는지 확인하고 없으면 저장
       const store = await this.stores.find({ name: createStoreInput.name });
       if (!store.length) {
-        console.log(' -- 스토어 생성 ');
         const newSto = await this.stores.create({
           ...createStoreInput,
+          sidoId: newSido.id,
           gugunId: newGugun.id,
         });
-        console.log(newSto);
         const newStore = await this.stores.save(newSto);
         console.log('newStore: ', newStore);
 
