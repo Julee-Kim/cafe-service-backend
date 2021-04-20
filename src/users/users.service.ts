@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -9,6 +9,7 @@ import {
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 import { GetProfileOutput } from './dtos/get-profile.dto';
+import { UpdateUserInput, UpdateUserOutput } from './dtos/update-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -88,6 +89,27 @@ export class UsersService {
       return {
         success: false,
         error: '유저를 찾지 못했습니다.',
+      };
+    }
+  }
+
+  async updateProfile(
+    userId: number, updateUserInput: UpdateUserInput
+  ): Promise<UpdateUserOutput> {
+    try {
+      const user = await this.users.findOneOrFail({ id: userId});
+
+      const updateUser = {...user, ...updateUserInput};
+      await this.users.save(updateUser);
+      
+      return {
+        success: true,
+        user: updateUser,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: '정보 수정을 실패했습니다.',
       };
     }
   }

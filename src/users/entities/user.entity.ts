@@ -46,6 +46,26 @@ export class User extends CoreEntity {
   @IsString()
   password: string;
 
+  @Field(type => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  phone?: string;
+
+  @Field(type => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  zonecode?: string;
+
+  @Field(type => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  address?: string;
+
+  @Field(type => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  addressDetail?: string;
+
   @BeforeInsert()
   async hashPassword(): Promise<void> {
     if (this.password) {
