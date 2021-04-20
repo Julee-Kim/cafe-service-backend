@@ -10,6 +10,7 @@ import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 import { GetProfileOutput } from './dtos/get-profile.dto';
 import { UpdateUserInput, UpdateUserOutput } from './dtos/update-profile.dto';
+import { UpdatePasswordInput, UpdatePasswordOutput } from './dtos/update-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -94,7 +95,8 @@ export class UsersService {
   }
 
   async updateProfile(
-    userId: number, updateUserInput: UpdateUserInput
+    userId: number,
+    updateUserInput: UpdateUserInput
   ): Promise<UpdateUserOutput> {
     try {
       const user = await this.users.findOneOrFail({ id: userId});
@@ -110,6 +112,30 @@ export class UsersService {
       return {
         success: false,
         error: '정보 수정을 실패했습니다.',
+      };
+    }
+  }
+
+  async updatePassword(
+    userId: number,
+    { password, newPassword }: UpdatePasswordInput
+  ): Promise<UpdatePasswordOutput> {
+    try {
+      const user = await this.users.findOneOrFail({ id: userId });
+
+      // 입력한 비밀번호와 db의 비밀번호가 일치하는지 확인
+      const isPasswordCurrent = await user.comparePassword(password);
+
+      if (!isPasswordCurrent) return { success: false, error: '현재 비밀번호가 일치하지 않습니다.' };
+
+      user.password = newPassword;
+      await this.users.save(user);
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: '비밀번호 변경을 실패했습니다.',
       };
     }
   }

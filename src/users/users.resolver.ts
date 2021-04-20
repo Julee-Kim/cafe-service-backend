@@ -7,6 +7,7 @@ import {
 } from './dtos/create-account.dto';
 import { GetProfileInput, GetProfileOutput } from './dtos/get-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { UpdatePasswordInput, UpdatePasswordOutput } from './dtos/update-password.dto';
 import { UpdateUserInput, UpdateUserOutput } from './dtos/update-profile.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -42,5 +43,14 @@ export class UsersResolver {
     @Args('input') updateUserInput: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
     return this.usersService.updateProfile(authUser.id, updateUserInput);
+  }
+
+  @Mutation(returns => UpdatePasswordOutput)
+  @Allow('LoggedIn')
+  updatePassword(
+    @AuthUser() authUser: User,
+    @Args('input') updatePasswordInput: UpdatePasswordInput,
+  ): Promise<UpdatePasswordOutput> {
+    return this.usersService.updatePassword(authUser.id, updatePasswordInput);
   }
 }
