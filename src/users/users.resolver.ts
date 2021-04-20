@@ -1,4 +1,6 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { Allow } from 'src/auth/allow.decorator';
+import { AuthUser } from 'src/auth/authUser.decorator';
 import {
   CreateAccountInput,
   CreateAccountOutput,
@@ -24,10 +26,11 @@ export class UsersResolver {
     return this.usersService.login(loginInput);
   }
 
-  @Query((returns) => GetProfileOutput)
+  @Query((returns) => User)
+  @Allow('LoggedIn')
   getProfile(
-    @Args() getProfileInput: GetProfileInput,
-  ): Promise<GetProfileOutput> {
-    return this.usersService.getProfile(getProfileInput.userId);
+    @AuthUser() authUser: User
+  ): User {
+    return authUser;
   }
 }
