@@ -53,6 +53,7 @@ export class UsersService {
         { email },
         { select: ['id', 'password'] },
       );
+
       if (!user) {
         return {
           success: false,

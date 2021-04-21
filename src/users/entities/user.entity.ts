@@ -7,8 +7,9 @@ import {
 } from '@nestjs/graphql';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, RelationId } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Cart } from 'src/orders/entities/cart.entity';
 
 export enum Genders {
   F = 'F',
@@ -65,6 +66,18 @@ export class User extends CoreEntity {
   @Column({ nullable: true })
   @IsString()
   addressDetail?: string;
+
+  @Field(type => Cart, { nullable: true })
+  @OneToOne(type => Cart, (cart) => cart.user, {
+    cascade: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn()
+  cart: Cart;
+
+  @RelationId((user: User) => user.cart)
+  cartId: number;
 
   @BeforeInsert()
   @BeforeUpdate()

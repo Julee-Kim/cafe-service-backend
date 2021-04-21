@@ -20,6 +20,11 @@ export class Menu extends CoreEntity {
   @Length(5)
   productName_en: string;
 
+  @Field((type) => Int, { defaultValue: 0 })
+  @Column({default: 0})
+  @IsNumber()
+  price: number;
+
   @Field((type) => String)
   @Column()
   @IsString()
