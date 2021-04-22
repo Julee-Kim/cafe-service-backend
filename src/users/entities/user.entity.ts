@@ -74,7 +74,7 @@ export class User extends CoreEntity {
     onUpdate: 'CASCADE',
   })
   @JoinColumn()
-  cart: Cart;
+  cart?: Cart;
 
   @RelationId((user: User) => user.cart)
   cartId: number;
