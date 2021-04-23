@@ -82,7 +82,7 @@ export class UsersService {
 
   async getProfile(id: number): Promise<GetProfileOutput> {
     try {
-      const user = await this.users.findOneOrFail({ id });
+      const user = await this.users.findOneOrFail({ id }, { relations: ['cart'] });
       return {
         success: true,
         user,

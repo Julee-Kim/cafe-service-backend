@@ -4,10 +4,12 @@ import { Menu } from 'src/menus/entities/menu.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateCartItemInput, CreateCartItemOutput } from './dtos/create-cartItem.dto';
+import { CreateCartItemsInput, CreateCartItemsOutput } from './dtos/create-cartItems.dto';
 import { DeleteCartItemsInput, DeleteCartItemsOutput } from './dtos/delete-cartItems.dto';
 import { GetCartItemsOutput } from './dtos/get-cartItems.dto';
 import { UpdateCartItemInput, UpdateCartItemOutput } from './dtos/update-cartItem.dto';
-import { Cart, Item } from './entities/cart.entity';
+import { UpdateCartItemsInput, UpdateCartItemsOutput } from './dtos/update-cartItems.dto';
+import { Cart } from './entities/cart.entity';
 
 @Injectable()
 export class OrdersService {
@@ -37,9 +39,9 @@ export class OrdersService {
   ): Promise<CreateCartItemOutput> {
     try {
       const menu = await this.menus.findOne({ id: menuId });
+      let resultCart = null;
 
       if(!user.cartId) {
-        console.log('// 카트 처음 생성한 경우')
         // 카트 처음 생성한 경우
         const items = [{
           menuId,
@@ -53,6 +55,8 @@ export class OrdersService {
         const cart = await this.carts.save(
           this.carts.create({ user, items })
         );
+
+        resultCart = cart;
 
         // 유저에 카트 아이디 저장
         await this.users.save({
@@ -85,10 +89,78 @@ export class OrdersService {
           })
         }
 
+        resultCart = cart;
+
         await this.carts.save(cart)
       }
       
-      return { success: true };
+      return { success: true, cart: resultCart };
+    } catch (error) {
+      return {
+        success: false,
+        error: '장바구니 담기에 실패했습니다.',
+      };
+    }
+  }
+
+  async createCartItems(
+    user: User,
+    { items: newItems }: CreateCartItemsInput
+  ): Promise<CreateCartItemsOutput> {
+    try {
+      let cartId: number;
+      let resultCart: Cart;
+
+      let i: number;
+      for(i = 0; i < newItems.length; i++) {
+        const newItem = newItems[i];
+
+        // 메뉴아이디를 가지고 메뉴 정보 가져오기
+        const menu = await this.menus.findOne({ id: newItem.menuId });
+
+        if(!menu) {
+          return {
+            success: false,
+            error: '존재하지 않는 메뉴는 장바구니에 추가할 수 없습니다.',
+          };
+        }
+
+        // 장바구니에 새로 추가할 아이템
+        const item = {
+          menuId: newItem.menuId,
+          qty: newItem.qty,
+          productName: menu.productName,
+          img: menu.img,
+          price: menu.price,
+        };
+
+        if(!cartId) {
+          // 카트 생성 및 아이템 저장
+          const cart = await this.carts.save(
+            this.carts.create({ user, items: [item] })
+          );
+
+          // 유저에 카트 아이디 저장
+          await this.users.save({
+            ...user,
+            cart
+          });
+
+          // 카트 아이디 할당
+          cartId = cart.id;
+          // 리턴할 리턴할 카트 저장
+          resultCart = cart;
+        } else {
+          // 카트 찾아서 아이템 저장
+          const cart = await this.carts.findOne({ id: cartId });
+          cart.items.push(item);
+          await this.carts.save(cart);
+          // 리턴할 카트 아이템에 카트 저장
+          resultCart = cart;
+        }
+      }
+
+      return { success: true, cart: resultCart };
     } catch (error) {
       return {
         success: false,
@@ -120,6 +192,25 @@ export class OrdersService {
         error: '수량 변경을 실패했습니다.',
       }; 
     }
+  }
+
+  async updateCartItems(
+    cartId: number,
+    { items }: UpdateCartItemsInput
+  ): Promise<UpdateCartItemsOutput> {
+    try {
+      const cart = await this.carts.findOne({ id: cartId });
+
+      cart.items = items;
+
+      await this.carts.save({ ...cart });
+      return { success: true, cart };
+    } catch (error) {
+      return {
+        success: false,
+        error: '장바구니 업데이트에 실패했습니다.',
+      }; 
+    } 
   }
 
   async deleteCartItems(
