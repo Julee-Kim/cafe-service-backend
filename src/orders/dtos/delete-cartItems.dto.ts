@@ -1,5 +1,6 @@
 import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { CoreOutput } from "src/common/dtos/output.dto";
+import { Cart } from "../entities/cart.entity";
 
 @InputType()
 export class DeleteCartItemsInput {
@@ -8,4 +9,7 @@ export class DeleteCartItemsInput {
 }
 
 @ObjectType()
-export class DeleteCartItemsOutput extends CoreOutput {}
+export class DeleteCartItemsOutput extends CoreOutput {
+  @Field(type => Cart, {nullable: true})
+  cart?: Cart;
+}

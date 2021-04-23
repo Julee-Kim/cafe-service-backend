@@ -7,7 +7,7 @@ import { CreateCartItemInput, CreateCartItemOutput } from './dtos/create-cartIte
 import { CreateCartItemsInput, CreateCartItemsOutput } from './dtos/create-cartItems.dto';
 import { DeleteCartItemsInput, DeleteCartItemsOutput } from './dtos/delete-cartItems.dto';
 import { GetCartItemsOutput } from './dtos/get-cartItems.dto';
-import { UpdateCartItemInput, UpdateCartItemOutput } from './dtos/update-cartItem.dto';
+import { UpdateCartItemQtyInput, UpdateCartItemQtyOutput } from './dtos/update-cartItem-qty.dto';
 import { UpdateCartItemsInput, UpdateCartItemsOutput } from './dtos/update-cartItems.dto';
 import { Cart } from './entities/cart.entity';
 
@@ -169,10 +169,10 @@ export class OrdersService {
     }
   }
 
-  async updateCartItem(
+  async updateCartItemQty(
     cartId: number,
-    { menuId, qty }: UpdateCartItemInput
-  ): Promise<UpdateCartItemOutput> {
+    { menuId, qty }: UpdateCartItemQtyInput
+  ): Promise<UpdateCartItemQtyOutput> {
     try {
       const cart = await this.carts.findOne({ id: cartId });
 
@@ -185,7 +185,8 @@ export class OrdersService {
       }
 
       await this.carts.save({ ...cart });
-      return { success: true };
+      console.log('cart => ', cart)
+      return { success: true, cart };
     } catch (error) {
       return {
         success: false,
@@ -219,6 +220,7 @@ export class OrdersService {
   ): Promise<DeleteCartItemsOutput> {
     try {
       const cart = await this.carts.findOne({ id: user.cartId });
+      let resultCart: Cart;
 
       const cartItems = cart.items.filter(item => {
         return menuIds.indexOf(item.menuId) == -1;
@@ -226,7 +228,8 @@ export class OrdersService {
 
       if(cartItems.length) {
         // 카트 아이템이 남아있는 경우 기존 카트 업데이트
-        await this.carts.save({ ...cart, items: cartItems });
+        const afterSaveCart = await this.carts.save({ ...cart, items: cartItems });
+        resultCart = afterSaveCart;
       } else {
         // 카트 아이템이 남아있지 않은 경우 카트 삭제
         await this.carts.delete({ id: user.cartId });
@@ -237,8 +240,11 @@ export class OrdersService {
           cart: null
         })
       }
-      
-      return { success: true };
+
+      return {
+        success: true,
+        ...(resultCart && {cart: resultCart})
+      };
     } catch (error) {
       return {
         success: false,

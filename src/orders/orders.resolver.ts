@@ -6,7 +6,7 @@ import { CreateCartItemInput, CreateCartItemOutput } from './dtos/create-cartIte
 import { CreateCartItemsInput, CreateCartItemsOutput } from './dtos/create-cartItems.dto';
 import { DeleteCartItemsInput, DeleteCartItemsOutput } from './dtos/delete-cartItems.dto';
 import { GetCartItemsOutput } from './dtos/get-cartItems.dto';
-import { UpdateCartItemInput, UpdateCartItemOutput } from './dtos/update-cartItem.dto';
+import { UpdateCartItemQtyInput, UpdateCartItemQtyOutput } from './dtos/update-cartItem-qty.dto';
 import { UpdateCartItemsInput, UpdateCartItemsOutput } from './dtos/update-cartItems.dto';
 import { Cart } from './entities/cart.entity';
 import { OrdersService } from './orders.service';
@@ -41,13 +41,13 @@ export class OrdersResolver {
     return this.ordersService.createCartItems(authUser, createCartItemsInput);
   }
 
-  @Mutation(returns => UpdateCartItemOutput)
+  @Mutation(returns => UpdateCartItemQtyOutput)
   @Allow('LoggedIn')
-  updateCartItem(
+  updateCartItemQty(
     @AuthUser() authUser: User,
-    @Args('input') udpateCartItemInput: UpdateCartItemInput
-  ): Promise<UpdateCartItemOutput> {
-    return this.ordersService.updateCartItem(authUser.cartId, udpateCartItemInput);
+    @Args('input') updateCartItemQtyInput: UpdateCartItemQtyInput
+  ): Promise<UpdateCartItemQtyOutput> {
+    return this.ordersService.updateCartItemQty(authUser.cartId, updateCartItemQtyInput);
   }
 
   @Mutation(returns => UpdateCartItemsOutput)
