@@ -12,7 +12,7 @@ import { Cart } from './entities/cart.entity';
 import { OrdersService } from './orders.service';
 
 @Resolver(of => Cart)
-export class OrdersResolver {
+export class CartsResolver {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Query(returns => GetCartItemsOutput)
