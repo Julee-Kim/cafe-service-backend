@@ -99,15 +99,16 @@ export class UsersService {
     userId: number,
     updateUserInput: UpdateUserInput
   ): Promise<UpdateUserOutput> {
+    console.log(updateUserInput)
     try {
-      const user = await this.users.findOneOrFail({ id: userId});
+      const user = await this.users.findOneOrFail({ id: userId }, { relations: ['cart'] });
 
       const updateUser = {...user, ...updateUserInput};
-      await this.users.save(updateUser);
+      const savedUser = await this.users.save(updateUser);
       
       return {
         success: true,
-        user: updateUser,
+        user: savedUser,
       };
     } catch (error) {
       return {
