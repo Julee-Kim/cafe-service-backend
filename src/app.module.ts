@@ -22,6 +22,7 @@ import { Gugun } from './stores/entities/gugun.entity';
 import { Sido } from './stores/entities/sido.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Cart } from './orders/entities/cart.entity';
+import { Payment } from './orders/entities/payment.entity';
 console.log(process.env.NODE_ENV)
 console.log(process.env.DB_PORT)
 console.log(process.env.DB_DATABASE)
@@ -54,7 +55,7 @@ console.log(process.env.DB_PASSWORD)
       database: process.env.DB_DATABASE,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: true,
-      entities: [Menu, User, Category, Sido, Gugun, Store, Cart],
+      entities: [Menu, User, Category, Sido, Gugun, Store, Cart, Payment],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

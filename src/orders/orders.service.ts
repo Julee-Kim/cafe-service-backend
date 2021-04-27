@@ -5,11 +5,13 @@ import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateCartItemInput, CreateCartItemOutput } from './dtos/create-cartItem.dto';
 import { CreateCartItemsInput, CreateCartItemsOutput } from './dtos/create-cartItems.dto';
+import { CreatePaymentInput } from './dtos/create-payment.dto';
 import { DeleteCartItemsInput, DeleteCartItemsOutput } from './dtos/delete-cartItems.dto';
 import { GetCartItemsOutput } from './dtos/get-cartItems.dto';
 import { UpdateCartItemQtyInput, UpdateCartItemQtyOutput } from './dtos/update-cartItem-qty.dto';
 import { UpdateCartItemsInput, UpdateCartItemsOutput } from './dtos/update-cartItems.dto';
 import { Cart } from './entities/cart.entity';
+import { Payment } from './entities/payment.entity';
 
 @Injectable()
 export class OrdersService {
@@ -17,6 +19,7 @@ export class OrdersService {
     @InjectRepository(Cart) private readonly carts: Repository<Cart>,
     @InjectRepository(User) private readonly users: Repository<User>,
     @InjectRepository(Menu) private readonly menus: Repository<Menu>,
+    @InjectRepository(Payment) private readonly payments: Repository<Payment>,
   ) {}
 
   async getCartItems(cartId: number): Promise<GetCartItemsOutput> {
@@ -252,6 +255,25 @@ export class OrdersService {
       }; 
     }
   }
+
+  async createPayment(
+    user: User,
+    createPaymentInput: CreatePaymentInput
+  ) {
+    try {
+      let i: number;
+      
+      const newPayment = this.payments.create({user, ...createPaymentInput});
+
+      const payment = await this.payments.save(newPayment);
+      console.log('new payment: ', payment)
+
+      return { success: true, payment }
+    } catch (error) {
+      return {
+        success: false,
+        error: '결제정보를 저장하는데 실패했습니다.',
+      }; 
+    }
+  }
 }
-
-

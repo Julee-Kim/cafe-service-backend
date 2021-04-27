@@ -2,14 +2,16 @@ import { InternalServerErrorException } from '@nestjs/common';
 import {
   Field,
   InputType,
+  Int,
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, RelationId } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToMany, OneToOne, RelationId } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Cart } from 'src/orders/entities/cart.entity';
+import { Payment } from 'src/orders/entities/payment.entity';
 
 export enum Genders {
   F = 'F',
@@ -78,6 +80,13 @@ export class User extends CoreEntity {
 
   @RelationId((user: User) => user.cart)
   cartId: number;
+
+  @Field(type => Payment, { nullable: true })
+  @OneToMany(type => Payment, (payment) => payment.user, {
+    cascade: true,
+    onDelete: 'NO ACTION'
+  })
+  payment?: Payment;
 
   @BeforeInsert()
   @BeforeUpdate()
