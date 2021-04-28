@@ -5,6 +5,7 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
+import { GetAuthUserOutput } from './dtos/get-auth.dto';
 import { GetProfileInput, GetProfileOutput } from './dtos/get-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UpdatePasswordInput, UpdatePasswordOutput } from './dtos/update-password.dto';
@@ -52,5 +53,11 @@ export class UsersResolver {
     @Args('input') updatePasswordInput: UpdatePasswordInput,
   ): Promise<UpdatePasswordOutput> {
     return this.usersService.updatePassword(authUser.id, updatePasswordInput);
+  }
+
+  @Query(returns => GetAuthUserOutput)
+  @Allow('LoggedIn')
+  async authUser(@AuthUser() authUser: User): Promise<GetAuthUserOutput> {
+    return {success: true};
   }
 }
