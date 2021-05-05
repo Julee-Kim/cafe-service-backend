@@ -60,6 +60,7 @@ console.log(process.env.DB_PASSWORD)
     GraphQLModule.forRoot({
       playground: true,
       autoSchemaFile: true,
+      introspection: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
     // JwtModule,
