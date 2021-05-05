@@ -58,6 +58,7 @@ console.log(process.env.DB_PASSWORD)
       entities: [Menu, User, Category, Sido, Gugun, Store, Cart, Payment],
     }),
     GraphQLModule.forRoot({
+      playground: true,
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
